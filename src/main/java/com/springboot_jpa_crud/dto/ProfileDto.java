@@ -11,9 +11,7 @@ public class ProfileDto {
     private String city;
     private String state;
 
-//    public ProfileDto(int i, String s) {
-//
-//    }
+
 
 //    @JsonBackReference
 //    private EmployeeDto employeeDto;

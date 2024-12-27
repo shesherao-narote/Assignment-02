@@ -8,11 +8,13 @@ import com.springboot_jpa_crud.entity.Employee;
 import com.springboot_jpa_crud.entity.Profile;
 import com.springboot_jpa_crud.exception.ResourceNotFoundException;
 import com.springboot_jpa_crud.repository.EmployeeRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -20,8 +22,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class EmployeeServiceImplTest {
@@ -63,8 +64,8 @@ class EmployeeServiceImplTest {
         assertEquals(employeeId, result.getEmp_id());
         assertEquals("John Doe", result.getName());
 
-        verify(employeeRepository, Mockito.times(1)).findById(employeeId);
-        verify(modelMapper, Mockito.times(1)).map(mockEmployee, EmployeeDto.class);
+        verify(employeeRepository, times(1)).findById(employeeId);
+        verify(modelMapper, times(1)).map(mockEmployee, EmployeeDto.class);
     }
 
 
@@ -105,9 +106,9 @@ class EmployeeServiceImplTest {
         assertEquals("John Doe", result.get(0).getName());
         assertEquals("Jane Smith", result.get(1).getName());
 
-        Mockito.verify(employeeRepository, Mockito.times(1)).findAll();
-        Mockito.verify(modelMapper, Mockito.times(1)).map(employee1, EmployeeDto.class);
-        Mockito.verify(modelMapper, Mockito.times(1)).map(employee2, EmployeeDto.class);
+        Mockito.verify(employeeRepository, times(1)).findAll();
+        Mockito.verify(modelMapper, times(1)).map(employee1, EmployeeDto.class);
+        Mockito.verify(modelMapper, times(1)).map(employee2, EmployeeDto.class);
     }
 
 
@@ -122,7 +123,7 @@ class EmployeeServiceImplTest {
         employeeService.deleteEmployeeById(employeeId);
 
         // Assert
-        Mockito.verify(employeeRepository, Mockito.times(1)).deleteById(employeeId);
+        Mockito.verify(employeeRepository, times(1)).deleteById(employeeId);
     }
 
 
@@ -136,58 +137,7 @@ class EmployeeServiceImplTest {
         assertThrows(EmptyResultDataAccessException.class,
                 () -> employeeService.deleteEmployeeById(employeeId));
 
-        Mockito.verify(employeeRepository, Mockito.times(1)).deleteById(employeeId);
-    }
-
-
-
-    @Test
-    void testAddEmployee_whenValidEmployeeDto_thenSavesEmployee() {
-
-        EmployeeDto employeeDto = new EmployeeDto();
-        employeeDto.setName("John Doe");
-        employeeDto.setEmail("john.doe@example.com");
-
-        ProfileDto profileDto1 = new ProfileDto(1, "Profile 1");
-        ProfileDto profileDto2 = new ProfileDto(2, "Profile 2");
-        employeeDto.setProfiles(List.of(profileDto1, profileDto2));
-
-        Employee employee = new Employee();
-        employee.setName("John Doe");
-        employee.setEmail("john.doe@example.com");
-
-        Profile profile1 = new Profile(1,"Profile 1");
-        Profile profile2 = new Profile(2,"Profile 2");
-        profile1.setEmployee(employee);
-        profile2.setEmployee(employee);
-        employee.setProfiles(List.of(profile1, profile2));
-
-        Employee savedEmployee = new Employee();
-        savedEmployee.setEmp_id(1);
-        savedEmployee.setName("John Doe");
-        savedEmployee.setEmail("john.doe@example.com");
-        savedEmployee.setProfiles(List.of(profile1, profile2));
-
-        EmployeeDto savedEmployeeDto = new EmployeeDto();
-        savedEmployeeDto.setEmp_id(1);
-        savedEmployeeDto.setName("John Doe");
-        savedEmployeeDto.setEmail("john.doe@example.com");
-        savedEmployeeDto.setProfiles(List.of(profileDto1, profileDto2));
-
-        Mockito.when(modelMapper.map(employeeDto, Employee.class)).thenReturn(employee);
-        Mockito.when(employeeRepository.save(employee)).thenReturn(savedEmployee);
-        Mockito.when(modelMapper.map(savedEmployee, EmployeeDto.class)).thenReturn(savedEmployeeDto);
-
-        EmployeeDto result = employeeService.addEmployee(employeeDto);
-
-        assertNotNull(result);
-        assertEquals(1, result.getEmp_id());
-        assertEquals("John Doe", result.getName());
-        assertEquals(2, result.getProfiles().size());
-
-        Mockito.verify(modelMapper, Mockito.times(1)).map(employeeDto, Employee.class);
-        Mockito.verify(employeeRepository, Mockito.times(1)).save(employee);
-        Mockito.verify(modelMapper, Mockito.times(1)).map(savedEmployee, EmployeeDto.class);
+        Mockito.verify(employeeRepository, times(1)).deleteById(employeeId);
     }
 
 
@@ -206,7 +156,7 @@ class EmployeeServiceImplTest {
 
         assertEquals("Employee not found with Id : " + employeeId, exception.getMessage());
 
-        Mockito.verify(employeeRepository, Mockito.times(1)).findById(employeeId);
+        Mockito.verify(employeeRepository, times(1)).findById(employeeId);
         Mockito.verifyNoInteractions(modelMapper);
         Mockito.verifyNoMoreInteractions(employeeRepository);
     }

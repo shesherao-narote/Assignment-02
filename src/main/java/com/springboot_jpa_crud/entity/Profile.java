@@ -27,7 +27,5 @@ public class Profile {
      @JsonBackReference
      private Employee employee;
 
-//    public Profile(int i, String s) {
-//
-//    }
+
 }

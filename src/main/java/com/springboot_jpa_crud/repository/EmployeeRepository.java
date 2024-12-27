@@ -17,7 +17,6 @@ public interface EmployeeRepository extends JpaRepository<Employee,Integer> {
 
 //    @Query("UPDATE Employee e SET e.is_deleted = true WHERE e.emp_id = :id")
 //    void softDeleteById(@Param("id") Long id);
-
 //    @Query("SELECT e FROM Employee e WHERE e.is_deleted = false")
 //    List<Employee> findAllActive();
 }
